@@ -1,0 +1,1 @@
+../../web-worker-manager-v0.1-main.js
