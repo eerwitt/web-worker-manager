@@ -10,7 +10,6 @@ module.exports = (grunt) ->
         files:
           'web-worker-manager-v0.1-main.js': ['lib/manager/**/*.coffee']
           'web-worker-manager-v0.1-worker.js': ['lib/worker/**/*.coffee']
-          'web/js/shared.js': ['lib/**/*.coffee']
     watch:
       coffee:
         options:
@@ -21,7 +20,6 @@ module.exports = (grunt) ->
       options:
         configFile: 'test/karma.conf.js'
         browsers: ['Chrome']
-        files: ['test/**/*.coffee']
       unit:
         reporters: 'dots'
         background: true
@@ -46,5 +44,5 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-uglify'
   grunt.loadNpmTasks 'grunt-karma'
 
-  grunt.registerTask 'default', ['connect', 'watch']
+  grunt.registerTask 'default', ['karma:unit', 'connect', 'watch']
   grunt.registerTask 'build', ['uglify:min']
