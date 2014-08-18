@@ -85,7 +85,7 @@ Please do contribute, I appreciate any help.
 
 This app relies on `Karma` and is tested using.
 
-`grunt`.
+`grunt oneshot`.
 
 ### Local Development
 
@@ -95,7 +95,7 @@ This project requires `Grunt` to opperate. Most of the code is written in `Coffe
   npm install -g grunt-cli
 
   # From project directory
-  grunt test
+  grunt oneshot
 
   # If all tests passed
   grunt build
