@@ -9,6 +9,10 @@ exports = exports ? this
 # Exceptions being thrown will raise back to the WebWorkerManager which will terminate the worker and start a new one in its place.
 ###
 class ManagedWebWorker
+  ###
+  # @param {Object} The context which is used for HTML5 Workers. For more information see https://developer.mozilla.org/en-US/docs/Web/API/DedicatedWorkerGlobalScope.
+  # @return {Null} Not used.
+  ###
   constructor: (@workerContext) ->
     @_jobs = {}
     @workerContext.onmessage = @_onMessage
@@ -17,15 +21,26 @@ class ManagedWebWorker
 
     @_sendTypedMessage "ready"
 
-  _sendMessage: (args) ->
-    @_postMethod args
-
+  ###
+  # A method which will send a message in a format understood by the WebWorkerManager.
+  #
+  # @param {Object} The workers communicate to the WebWorkerManager by passing message object with a key called "messageType". The "messageType" is used to run code related to that message.
+  # @param {Object} A list of parameters which is passed along back to the WebWorkerManager
+  # @return {Object} The response from the system's _postMethod. Not used.
+  ###
   _sendTypedMessage: (messageType, params={}) ->
     unless messageType?
       throw new Error("No messageType specified for the outgoing message.")
 
-    @_sendMessage messageType: messageType, params: params
+    @_postMethod messageType: messageType, params: params
+    true
 
+  ###
+  # Event handler for messages coming from the WebWorkerManager.
+  #
+  # @param {Object} Event data from messages sent to the worker, the information used is under the "data" key in the event object.
+  # @return {Object} Response fromthe executed job. Not used.
+  ###
   _onMessage: (event) =>
     jobName = event?.data?.messageType
     unless jobName?
@@ -39,6 +54,13 @@ class ManagedWebWorker
         ( (payload) => @_sendTypedMessage "complete", payload: payload),
         ( (error) => @_sendTypedMessage "error", error: error ))
 
+  ###
+  # The method used to register a new job from client code.
+  #
+  # @param {String} A unique name to be used for the job which is being ran. If the same name is used twice only the second one is actually stored.
+  # @param {Function} When a job is executed this callback will be sent information from the worker. The callback should accept 4 parameters (params sent from manager, progress callback, completion callback and an error calback).
+  # @return {Function} The callback parameter. Not used.
+  ###
   registerJob: (jobName, callback) =>
     @_jobs[jobName] = callback
 

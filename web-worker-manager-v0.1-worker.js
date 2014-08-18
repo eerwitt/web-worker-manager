@@ -15,6 +15,11 @@
    */
 
   ManagedWebWorker = (function() {
+
+    /*
+     * @param {Object} The context which is used for HTML5 Workers. For more information see https://developer.mozilla.org/en-US/docs/Web/API/DedicatedWorkerGlobalScope.
+     * @return {Null} Not used.
+     */
     function ManagedWebWorker(workerContext) {
       this.workerContext = workerContext;
       this.registerJob = __bind(this.registerJob, this);
@@ -27,9 +32,14 @@
       this._sendTypedMessage("ready");
     }
 
-    ManagedWebWorker.prototype._sendMessage = function(args) {
-      return this._postMethod(args);
-    };
+
+    /*
+     * A method which will send a message in a format understood by the WebWorkerManager.
+     *
+     * @param {Object} The workers communicate to the WebWorkerManager by passing message object with a key called "messageType". The "messageType" is used to run code related to that message.
+     * @param {Object} A list of parameters which is passed along back to the WebWorkerManager
+     * @return {Object} The response from the system's _postMethod. Not used.
+     */
 
     ManagedWebWorker.prototype._sendTypedMessage = function(messageType, params) {
       if (params == null) {
@@ -38,11 +48,20 @@
       if (messageType == null) {
         throw new Error("No messageType specified for the outgoing message.");
       }
-      return this._sendMessage({
+      this._postMethod({
         messageType: messageType,
         params: params
       });
+      return true;
     };
+
+
+    /*
+     * Event handler for messages coming from the WebWorkerManager.
+     *
+     * @param {Object} Event data from messages sent to the worker, the information used is under the "data" key in the event object.
+     * @return {Object} Response fromthe executed job. Not used.
+     */
 
     ManagedWebWorker.prototype._onMessage = function(event) {
       var jobName, _ref;
@@ -74,6 +93,15 @@
         })(this)));
       }
     };
+
+
+    /*
+     * The method used to register a new job from client code.
+     *
+     * @param {String} A unique name to be used for the job which is being ran. If the same name is used twice only the second one is actually stored.
+     * @param {Function} When a job is executed this callback will be sent information from the worker. The callback should accept 4 parameters (params sent from manager, progress callback, completion callback and an error calback).
+     * @return {Function} The callback parameter. Not used.
+     */
 
     ManagedWebWorker.prototype.registerJob = function(jobName, callback) {
       return this._jobs[jobName] = callback;

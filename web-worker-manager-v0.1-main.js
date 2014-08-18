@@ -35,6 +35,13 @@
    */
 
   WebWorkerManager = (function() {
+
+    /*
+     * @param {String} The aboslute or relative URL of the worker script which runs methods using HTML5 WebWorkers.
+     * @param {Integer} The size of the pool of workers, this parameter should be tweaked to match what the clients are capable of using.
+     * @param {Class} Underlying class used to create the workers, defaults to using HTML5 web workers.
+     * @return {Null} Not used.
+     */
     function WebWorkerManager(workerScriptLocation, poolSize, workerClass) {
       var i, _i, _ref;
       this.workerScriptLocation = workerScriptLocation;
@@ -51,11 +58,25 @@
       }
     }
 
+
+    /*
+     * Validates the required libraries and variables are available.
+     *
+     * @return {Null} raises exceptions if problems are found.
+     */
+
     WebWorkerManager.prototype._validateRequirements = function() {
       if (!((typeof Q !== "undefined" && Q !== null) && (this.workerClass != null) && (this.workerScriptLocation != null))) {
         throw new Error("Unable to initialize WebWorkerManager due to a missing parameter. Q found... " + (typeof Q !== "undefined" && Q !== null) + " WorkerClass found... " + (this.workerClass != null));
       }
     };
+
+
+    /*
+     * Creates a Worker thread which will be used to do the actual work required. The @workerClass needs to be defined before using this.
+     *
+     * @param {String} The identification string to be used internally to address the created thread.
+     */
 
     WebWorkerManager.prototype._createWorker = function(id) {
       var thread;
@@ -88,6 +109,14 @@
       });
     };
 
+
+    /*
+     * Find a worker in the pool of workers matching an ID or raise an error.
+     *
+     * @param {String} An ID associated with a worker which is available in the queue.
+     * @returns {Object} A WebWorker with a status, thread and an ID.
+     */
+
     WebWorkerManager.prototype._getWorkerById = function(id) {
       var workers;
       workers = this.pool.filter(function(worker) {
@@ -102,6 +131,14 @@
       return workers[0];
     };
 
+
+    /*
+     * Handle any error by killing the current thread and creating a new one. This is to try and protect from memory leaks caused by recurring errors.
+     *
+     * @param {String} The ID of the worker which reported an error.
+     * @returns {Object} The newly created worker is returned. Not used.
+     */
+
     WebWorkerManager.prototype._handleErrors = function(id) {
       var error, replacedId, worker;
       worker = this._getWorkerById(id);
@@ -115,6 +152,15 @@
       replacedId = "" + id + ".resqued";
       return this._createWorker(replacedId);
     };
+
+
+    /*
+     * Takes messages sent from the WebWorkerManager and parses them to try and execute their related methods. Throws an error if the event is uknown.
+     *
+     * @param {String} ID of the worker which has been sent a message from the manager.
+     * @param {Object} Contents of the raw event sent.
+     * @return {Null} Not used.
+     */
 
     WebWorkerManager.prototype._handleWorker = function(id, event) {
       var messageType, params, _ref, _ref1;
@@ -134,6 +180,17 @@
       }
     };
 
+
+    /*
+     * Take a worker and change their status to be IDLE then try to get the next job off the queue and run it. If there is no job to run the worker stays IDLE waiting for work.
+     *
+     * NOTE currently this is used as a shortcut to be called when a worker needs to be set to IDLE then it picks up work.
+     * Since so much of this system works on events being passed around it would make since to have this be an event based approach instead.
+     *
+     * @param {Object} The WebWorker which needs its status reset to IDLE.
+     * @returns {Null} Not used.
+     */
+
     WebWorkerManager.prototype._updateWorkerToIdle = function(worker) {
       var newJob;
       if (worker == null) {
@@ -150,12 +207,28 @@
       return this._updateWorkerToIdle(worker);
     };
 
+
+    /*
+     * If no workers are available, this method will add a callback into the queue of jobs which will be picked up next by IDLE threads.
+     *
+     * @param {Function} Run with the next avaiable worker.
+     * @returns {Null} Not used.
+     *
+     */
+
     WebWorkerManager.prototype._addToQueue = function(callback) {
       if (typeof callback !== "function") {
         throw new Error("The callback being added to the queue is not a function.");
       }
       return this.queue.push(callback);
     };
+
+
+    /*
+     * Try to get an IDLE worker but if they are all busy put the job in the queue. Once there is a worker available start running the job.
+     *
+     * @returns {Promise} Q.Promise returned which will be resolved once a worker is available.
+     */
 
     WebWorkerManager.prototype.getWorker = function() {
       return Q.Promise((function(_this) {
@@ -180,6 +253,15 @@
         };
       })(this));
     };
+
+
+    /*
+     * Run a job using HTML5 Workers by using the existing code setup in a separate worker file.
+     *
+     * @param {String} The name of the job to be executed, this must be the same as what the worker is expecting or else the job will not be ran.
+     * @param {Object} Passed to the workers as raw information they can use.
+     * @returns {Promise} Q.Promise which will be resolved once the job is complete.
+     */
 
     WebWorkerManager.prototype.runJob = function(jobName, params) {
       var runJob;

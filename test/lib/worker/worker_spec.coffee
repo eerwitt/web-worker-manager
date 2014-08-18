@@ -40,15 +40,19 @@ describe "ManagedWebWorker", ->
 
       $worker._onMessage(data: {messageType: "fake_job"})
       expect(fakeJob).toHaveBeenCalled()
+
   describe "#_sendTypedMessage", ->
     it "throws an error if no message type is specified", ->
       expect(-> $worker._sendTypedMessage() ).toThrow()
 
     it "sends a message converting params to a hash", ->
-      spy = spyOn($worker, "_sendMessage")
+      spy = spyOn($worker, "_postMethod")
       $worker._sendTypedMessage("test", test: true)
 
       expect(spy).toHaveBeenCalledWith(messageType: "test", params: {test: true})
+
+  describe "#_postMethod", ->
+    it "uses a transferable object to send back info"
 
   describe "#registerJob", ->
     it "adds a job using the jobName with a callback which is executed when asked for", ->

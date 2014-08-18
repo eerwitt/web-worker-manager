@@ -246,6 +246,8 @@ describe "WebWorkerManager", ->
       expect(spy.calls.count()).toBe(1)
 
   describe "#runJob", ->
+    it "sends parameters to the job as a transferable object"
+
     it "starts a job running", (done) ->
       idleWorker =
         thread:

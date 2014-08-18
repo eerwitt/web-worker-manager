@@ -14,7 +14,7 @@ There are four steps in creating a task which can be used with this library.
 
 ### Include the library.
 
-Include the `web-worker-manager-v0.1.js` on any page in either the `head` or at the close of the `body` tag.
+Include the `web-worker-manager-v0.1-main.js` on any page in either the `head` or at the close of the `body` tag.
 
 ```html
 <html>
@@ -35,13 +35,14 @@ Create a separate file called `main.js` which will instantiate the web worker ma
 ```javascript
 // The manager requires the location of the worker code to be passed in. This is the location relative to the current page the browser is on.
 // *It is recommended to use an absolute path if possible.
-manager = new WebWorkerManager("/path/to/worker.js")
+manager = new WebWorkerManager("/js/worker.js");
 
 // #runJob will ask an available worker to execute the code related to a job of the same name. That job will then be sent a message including
 // the data which is passed in as a second parameter.
-manager.runJob("parseString", {data: "Some stuff in here"})
-  .then( function(results) { console.log(results) } )
-  .fail( function(error) { console.error(errror) } )
+manager.runJob("downcaseWords", {"words": "Hello Who Is this"})
+  .then(function(d) {console.log(d);})
+  .progress(function(p) {console.info(p);})
+  .fail(function(e) {console.error(e);});
 ```
 
 The `#runJob` method is used for a single job to be ran, it returns a `Q` promise immediately.
@@ -54,16 +55,26 @@ The `worker.js` is responsible for the majority of actual code being executed. E
 
 ```javascript
 // We need to import the script which will provide some default functions to help get the worker setup properly.
-importScripts("/path/to/web-worker-manager-v0.1-worker.js")
+importScripts("/js/web-worker-manager-v0.1-worker.js");
 
 // To create a job we give it a name and code to call when it is ran.
-registerJob("parseString", function(params, errorCallback) {
-  if(params.data === undefined) {
-    errorCallback("No string supplied.")
+// The callbacks given are used to pass back the current status of the job.
+//   * progress - notifies of updates towards the final goal.
+//   * complete - sends back the payload when the job is done.
+//   * error - generates an error which can be captured upstream.
+registerJob("downcaseWords", function(params, progress, complete, error) {
+  if(params.words === undefined) {
+    error("No string supplied");
   }
+  words = params.words.split(/\s/);
+  total = words.length;
+  
+  complete(words.map( function(word, i) {
+    progress(i, total);
 
-  return params.data.split();
-})
+    return word.toLowerCase();
+  }));
+});
 ```
 
 ## Contibuting
@@ -74,7 +85,7 @@ Please do contribute, I appreciate any help.
 
 This app relies on `Karma` and is tested using.
 
-`grunt test`.
+`grunt`.
 
 ### Local Development
 

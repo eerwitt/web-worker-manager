@@ -8,8 +8,11 @@
 </head>
 <body>
   <script type="text/javascript">
-    manager = new WebWorkerManager("js/worker.js")
-    manager.runJob("downcaseWords", {"words": "Hello Who Is this"}).then(function(d) {console.log(d);}).progress(function(p) {console.log(p);}).fail(function(e) {console.error(e);});
+    manager = new WebWorkerManager("js/worker.js");
+    manager.runJob("downcaseWords", {"words": "Hello Who Is this"})
+      .then(function(d) {console.log(d);})
+      .progress(function(p) {console.info(p);})
+      .fail(function(e) {console.error(e);});
   </script>
 </body>
 </html>
