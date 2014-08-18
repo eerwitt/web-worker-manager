@@ -3,8 +3,9 @@ module.exports = (grunt) ->
     pkg: grunt.file.readJSON('package.json')
     connect:
       server:
-        port: 8000
-        base: './examples'
+        options:
+          port: 8000
+          base: './examples'
     coffee:
       compile:
         files:
@@ -14,16 +15,19 @@ module.exports = (grunt) ->
       coffee:
         options:
           livereload: true
+          debounceDelay: 8000
         files: ['lib/**/*.coffee', 'examples/**/*.coffee', 'examples/**/*.html', 'test/**/*.coffee']
-        tasks: ['coffee', 'karma:unit:run']
+        tasks: ['coffee', 'karma:unit', 'uglify:min']
     karma:
       options:
         configFile: 'test/karma.conf.js'
-        browsers: ['Chrome']
+        browsers: ['PhantomJS']
       unit:
         reporters: 'dots'
-        background: true
+        background: false
+        singleRun: true
       continuous:
+        background: false
         singleRun: true
         browsers: ['PhantomJS']
     uglify:
@@ -44,5 +48,6 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-uglify'
   grunt.loadNpmTasks 'grunt-karma'
 
-  grunt.registerTask 'default', ['karma:unit', 'connect', 'watch']
-  grunt.registerTask 'build', ['uglify:min']
+  grunt.registerTask 'default', ['connect', 'watch']
+  grunt.registerTask 'build', ['coffee', 'uglify:min']
+  grunt.registerTask 'oneshot', ['coffee', 'karma:continuous']

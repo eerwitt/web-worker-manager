@@ -22,7 +22,7 @@
     "karma-coffee-preprocessor": "*",
     "karma-phantomjs-launcher": "*",
     "karma-chrome-launcher": "*",
-    "karma-jasmine": "*",
+    "karma-jasmine": "~0.2.0",
     "http-server": "*"
   },
   "scripts": {

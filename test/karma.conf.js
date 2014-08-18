@@ -7,17 +7,18 @@ module.exports = function(config){
     files : [
       'bower_components/q/q.js',
       'web-worker-manager-v0.1-main.js',
+      'web-worker-manager-v0.1-worker.js',
       'test/**/*.coffee'
     ],
     frameworks: ['jasmine'],
     plugins : [
       'karma-coffee-preprocessor',
+      'karma-phantomjs-launcher',
       'karma-chrome-launcher',
       'karma-jasmine'
     ],
     coffeePreprocessor: {
       options: {
-        bare: true,
         sourceMap: false
       },
       transformPath: function(path) {

@@ -1,3 +1,3 @@
-describe "Test tests", ->
-  it "doesn't break", ->
+describe "Tests", ->
+  it "basic validation", ->
     expect(1 + 2).toBe(3)
