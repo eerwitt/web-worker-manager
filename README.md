@@ -1,8 +1,6 @@
 # Web Worker Manager
 
-Manage background HTML5 workers in the browser to compute long running intensive tasks. The library is setup to be simple to start jobs and deal with callbacks on an event basis.
-
-TODO: A fallback for browser which do not support HTML5 `Workers` is available but will be ran in an asynchronous manner.
+Manage background HTML5 workers in the browser to compute long running intensive tasks.
 
 ## Installation
 
@@ -136,3 +134,4 @@ If any library I came across had `0` tests, I didn't regard it with any serious 
     * Number of errors
     * Time for jobs to complete
   * See tests for using [Transferable objects](https://developer.mozilla.org/en-US/docs/Web/Guide/Performance/Using_web_workers#Passing_data_by_transferring_ownership_(transferable_objects))
+  * A fallback for browser which do not support HTML5 `Workers` is available but will be ran in an asynchronous manner.
