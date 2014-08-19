@@ -120,7 +120,7 @@ The project follows a layout of.
 
 This isn't the only library for managing HTML5 Web Workers I have found. Before making it I looked at some others which didn't work great for me but may be helpful to other people.
 
-If any library I came across had `0` tests I didn't regard it with any serious attention.
+If any library I came across had `0` tests, I didn't regard it with any serious attention.
 
 ### Links
   * [Catiline.js](https://github.com/calvinmetcalf/catiline) My favorite: good documentation, interesting examples, decent test suite and hasn't been updated recently.
