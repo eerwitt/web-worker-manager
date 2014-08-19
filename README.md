@@ -2,7 +2,7 @@
 
 Manage background HTML5 workers in the browser to compute long running intensive tasks. The library is setup to be simple to start jobs and deal with callbacks on an event basis.
 
-A fallback for browser which do not support HTML5 `Workers` is available but will be ran in an asynchronous manner.
+TODO: A fallback for browser which do not support HTML5 `Workers` is available but will be ran in an asynchronous manner.
 
 ## Installation
 
@@ -51,7 +51,7 @@ If all the workers are already working the job will be placed in a queue to be p
 
 ### Create your application's worker file (worker.js)
 
-The `worker.js` is responsible for the majority of actual code being executed. Each worker will be reused until the manager is shut down.
+The `worker.js` is responsible for the majority of actual code being executed. Each worker will be reused until the manager is shut down or an exception occurs in the worker.
 
 ```javascript
 // We need to import the script which will provide some default functions to help get the worker setup properly.
@@ -115,3 +115,24 @@ The project follows a layout of.
     - manager     // Manager related functions
   - examples      // Example code
 ```
+
+## Other Libraries
+
+This isn't the only library for managing HTML5 Web Workers I have found. Before making it I looked at some others which didn't work great for me but may be helpful to other people.
+
+If any library I came across had `0` tests I didn't regard it with any serious attention.
+
+### Links
+  * [Catiline.js](https://github.com/calvinmetcalf/catiline) My favorite: good documentation, interesting examples, decent test suite and hasn't been updated recently.
+  * [Architect](https://github.com/EtienneLem/architect) Interesting: poor documentation, good examples, poor test suite and hasn't been updated recently.
+  * [jQuery.Hive](https://github.com/rwaldron/jquery-hive) Surprising: unsure documentation (malware notice in chrome), OK examples, poor test suite and hasn't been updated recently.
+  * [Runners.js](https://github.com/tantaman/Runners.js) Very similar: decent documentation, good examples, great test suite and hasn't been updated recently.
+
+## TODO
+  * Explore why `karma:unit:run` with `grunt watch` isn't running on successive calls.
+  * Create a fallback for browsers which don't support HTML5 `Worker`.
+  * Add in general information on currently running jobs.
+    * Number of jobs running
+    * Number of errors
+    * Time for jobs to complete
+  * See tests for using [Transferable objects](https://developer.mozilla.org/en-US/docs/Web/Guide/Performance/Using_web_workers#Passing_data_by_transferring_ownership_(transferable_objects))
