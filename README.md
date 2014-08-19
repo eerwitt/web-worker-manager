@@ -4,7 +4,7 @@ Manage background HTML5 workers in the browser to compute long running intensive
 
 ## Installation
 
-There are four steps in creating a task which can be used with this library.
+Steps to using this library to manage HTML5 workers.
 
 * Include the library and a copy of `Q`.
 * Create your application's main calls to the web worker manager.
