@@ -48,6 +48,7 @@ class ManagedWebWorker
     else if not @_jobs[jobName]?
       throw new Error("No job exists by that jobName")
     else
+      # TODO This solution smelled from the start, currently while looking to add in more callbacks I realized it is worth it to make this into a class which can be inherited from which will have a scope inside that object. This means I could call any set of the methods on that object which would include sending messages and be much more testable.
       @_jobs[jobName](
         event.data.params,
         ( (current, total) => @_sendTypedMessage "progress", current: current, total: total ),
