@@ -45,7 +45,7 @@ manager.runJob("downcaseWords", {"words": "Hello Who Is this"})
 
 The `#runJob` method is used for a single job to be ran, it returns a `Q` promise immediately.
 
-If all the workers are already working the job will be placed in a queue to be picked up by the next available worker.
+If all the workers are already working, the job will be placed in a queue to be picked up by the next available worker.
 
 ### Create your application's worker file (worker.js)
 
