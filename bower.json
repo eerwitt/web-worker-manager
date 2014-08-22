@@ -1,11 +1,27 @@
 {
   "homepage": "https://github.com/eerwitt/web-worker-manager",
-  "version": "0.1",
+  "version": "0.1.0",
   "name": "web-worker-manager",
   "description": "Manage background HTML5 workers in the browser to compute long running intensive tasks. The library is setup to be simple to start jobs and deal with callbacks on an event basis.",
   "repository": "https://github.com/eerwitt/web-worker-manager",
   "license": "MIT",
   "private": false,
+  "keywords": [
+    "web-worker-manager",
+    "web workers",
+    "browser thread manager",
+    "html5 workers"
+  ],
+  "authors": [
+    "Erik Erwitt"
+  ],
+  "ignore": [
+    "**/*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "lib"
+  ],
   "dependencies": {
     "q": "1.0.1"
   }
