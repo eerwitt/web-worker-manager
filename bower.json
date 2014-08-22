@@ -15,6 +15,10 @@
   "authors": [
     "Erik Erwitt"
   ],
+  "main": [
+    "web-worker-manager-v0.1-main.min.js",
+    "web-worker-manager-v0.1-worker.min.js"
+  ],
   "ignore": [
     "**/*",
     "node_modules",
